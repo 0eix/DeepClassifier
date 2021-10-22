@@ -99,3 +99,10 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# local files
+.DS_Store
+workspace-utils.py
+.vscode/
+saved_models/
+flowers/

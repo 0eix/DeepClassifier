@@ -1,6 +1,6 @@
 # Image classifier
 
-AI Programming with Python Nanodegree final project. In this project, I developed a generic image classifier which can perform classification after being trained on any set of labeled images with PyTorch, then converted it into a command line application.
+AI Programming with Python Nanodegree final project. In this project, I built with PyTorch a generic image classifier which can perform classification after being trained on any set of labeled images, then converted it into a command line application.
  
 ### Features: 
 - Save and continue the training from a checkpoint

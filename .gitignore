@@ -106,3 +106,6 @@ workspace-utils.py
 .vscode/
 saved_models/
 flowers/
+
+.idea/
+*.pth

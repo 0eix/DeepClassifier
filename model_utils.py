@@ -1,6 +1,7 @@
 import torch
 from torch import nn
-from torchvision import models
+from torchvision.models import resnet50, alexnet, vgg13, vgg16, densenet161
+from torchvision.models import ResNet50_Weights, AlexNet_Weights, VGG13_Weights, VGG16_Weights, DenseNet161_Weights
 
 
 def freeze_model_params_(model):
@@ -42,6 +43,8 @@ def build_classifier(num_features, num_hidden_units, num_classes, dropout):
 
         num_classes (Int): the number of units in the output layer
 
+        dropout (Float): the nodes drop probability
+
     Returns:
         classifier (nn.Module): a model capable of classification
     """
@@ -72,14 +75,15 @@ def build_model(arch, num_hidden_units, num_classes, dropout):
 
         num_classes (Int): the number of classes in the dataset.
 
+        dropout (Float): the nodes drop probability
+
     Returns:
         model (nn.Module): a convolutional neural network with a classifier
         layer ready to be trained.
     """
-    model = None
 
     if arch == "resnet50":
-        model = models.resnet50(pretrained=True)
+        model = resnet50(weights=ResNet50_Weights.DEFAULT)
         freeze_model_params_(model)
         num_features = model.fc.in_features
         model.fc = build_classifier(
@@ -87,7 +91,7 @@ def build_model(arch, num_hidden_units, num_classes, dropout):
         )
 
     elif arch == "alexnet":
-        model = models.alexnet(pretrained=True)
+        model = alexnet(weights=AlexNet_Weights.DEFAULT)
         freeze_model_params_(model)
         num_features = model.classifier[0].in_features
         model.classifier = build_classifier(
@@ -95,7 +99,7 @@ def build_model(arch, num_hidden_units, num_classes, dropout):
         )
 
     elif arch == "vgg13":
-        model = models.vgg13(pretrained=True)
+        model = vgg13(weights=VGG13_Weights.DEFAULT)
         freeze_model_params_(model)
         num_features = model.classifier[0].in_features
         model.classifier = build_classifier(
@@ -103,7 +107,7 @@ def build_model(arch, num_hidden_units, num_classes, dropout):
         )
 
     elif arch == "vgg16":
-        model = models.vgg16(pretrained=True)
+        model = vgg16(weights=VGG16_Weights.DEFAULT)
         freeze_model_params_(model)
         num_features = model.classifier[0].in_features
         model.classifier = build_classifier(
@@ -111,7 +115,7 @@ def build_model(arch, num_hidden_units, num_classes, dropout):
         )
 
     elif arch == "densenet161":
-        model = models.densenet161(pretrained=True)
+        model = densenet161(weights=DenseNet161_Weights.DEFAULT)
         freeze_model_params_(model)
         num_features = model.classifier.in_features
         model.classifier = build_classifier(
@@ -127,7 +131,7 @@ def build_model(arch, num_hidden_units, num_classes, dropout):
 
 def rebuild_model_from_checkpoint(checkpoint_path):
     """
-    Rebuild a model from it's checkpoint.
+    Rebuild a model from its checkpoint.
 
     Args:
         checkpoint_path (Path): a path to the model's checkpoint.

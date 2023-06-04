@@ -7,7 +7,7 @@ import torch
 def datasets_folder_type(data_dir):
     """
     Check if a directory is a valid datasets folder for training a neural
-    network. To be valid, the directory must contain at least two subfolders
+    network. To be valid, the directory must contain at least two sub-folders
     named /train and /valid containing respectively training data and cross
     validation data. If the directory fails to match this structure an error
     is raised.
@@ -19,7 +19,7 @@ def datasets_folder_type(data_dir):
         data_dir (string): path to the data directory.
 
     Returns:
-        data_dir_dict (Dict): a dictionnary containing the paths to the
+        data_dir_dict (Dict): a dictionary containing the paths to the
         training and validation folders.
     """
 
@@ -37,7 +37,7 @@ def datasets_folder_type(data_dir):
         or not any(True for _ in valid_dir.iterdir())
     ):
         raise argparse.ArgumentTypeError(
-            f"{data_dir} does not contain the required subfolders or \
+            f"{data_dir} does not contain the required sub-folders or \
             data for training (/train) and cross validation (/valid)"
         )
     else:
@@ -54,7 +54,7 @@ def probability_type(p):
     Check if a value is a valid probability. To be valid the value must be
     a float between 0 and 1. This function raises an error if the test fails.
 
-    This function is use by argparse to check if probability of droupout
+    This function is use by argparse to check if probability of dropout
     specified by the user as a cli argument is a valid value.
 
     Args:
@@ -75,17 +75,15 @@ def probability_type(p):
 def json_file_type(filepath):
     """
     Check if a file is a valid json file.
-    This function is used by argparse to load the category to name dictionnary.
+    This function is used by argparse to load the category to name dictionary.
 
     Args:
-        filepath (Path): the path to the json file.
+        filepath (str): the path to the json file.
 
     Returns:
-        cat_to_name (dict): a dictionnary containing the mapping of each
+        cat_to_name (dict): a dictionary containing the mapping of each
         category in the dataset to its corresponding label.
     """
-
-    filepath = Path(filepath)
     with open(filepath, "r") as f:
         try:
             cat_to_name = json.load(f)

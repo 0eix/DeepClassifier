@@ -30,16 +30,16 @@ def get_cli_arguments():
         epilog="\
         Examples:\n\
         * Train the model of a flower dataset:\n\
-        \tpython train.py ./flower\n\n\
+        \tpython train.py ./flowers\n\n\
         * Set the directory to save the model checkpoints:\n\
-        \tpython train.py ./flower --save_dir ./saved_models\n\n\
+        \tpython train.py ./flowers --save_dir ./saved_models\n\n\
         * Choose the architecture:\n\
-        \tpython train.py ./flower --arch 'vgg13'\n\n\
+        \tpython train.py ./flowers --arch 'vgg13'\n\n\
         * Set the hyperparameters:\n\
         \tpython train.py ./flowers --learning_rate 0.01 --hidden_units 512 \
         --dropout 0.5 --epochs 20\n\n\
         * Use the GPU for training:\n\
-        \tpython train.py ./flower --gpu\
+        \tpython train.py ./flowers --gpu\
         ",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -48,9 +48,9 @@ def get_cli_arguments():
         "data_dir",
         type=datasets_folder_type,
         help="path to the folder containing the training and the cross \
-        validation data. It must contain at least two subfolders namely: \
+        validation data. It must contain at least two sub-folders namely: \
         train (which contains the training images) and valid (which contains \
-        the cross validation images). Each of these subfolders should follow \
+        the cross validation images). Each of these sub-folders should follow \
         the torchvision.datasets.ImageFolder default arrangement",
     )
 
@@ -135,7 +135,7 @@ def train_model_(
     Args:
         model (nn.Module): a convolutional neural network.
 
-        dataloaders (Dict): a dictionnary containing the dataloaders.
+        dataloaders (Dict): a dictionary containing the dataloaders.
 
         criterion (nn.Module): the loss function.
 
@@ -145,7 +145,7 @@ def train_model_(
 
         epochs (Int): the number of epochs for the training.
 
-        checkpoint (dict): the checkpoint to update an save.
+        checkpoint (dict): the checkpoint to update and save.
 
         save_dir (Path): the directory where to save the checkpoint.
     Return:
@@ -170,8 +170,8 @@ def train_model_(
         accuracy = 0
         # Keep track of the real labels and the outputs to calculate
         # the f1 score
-        targets = []
-        outputs = []
+        targets = torch.tensor([], device=device)
+        outputs = torch.tensor([], device=device)
 
         model.train()
         for inputs, labels in dataloaders["train"]:
@@ -203,17 +203,21 @@ def train_model_(
                 equals = top_class == labels.view(*top_class.shape)
                 accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
 
-                targets.extend(labels)
-                outputs.extend(top_class)
+                outputs = torch.cat((outputs, top_class), dim=0)
+                targets = torch.cat((targets, labels), dim=0)
             else:
                 train_loss /= len(dataloaders["train"])
                 valid_loss /= len(dataloaders["valid"])
                 accuracy /= len(dataloaders["valid"])
+
+                targets_cpu = targets.cpu().detach().numpy()
+                outputs_cpu = outputs.cpu().detach().numpy()
+
                 f1 = f1_score(
-                    targets,
-                    outputs,
+                    targets_cpu,
+                    outputs_cpu,
                     average="weighted",
-                    labels=np.unique(outputs),
+                    labels=np.unique(outputs_cpu)
                 )
 
                 if accuracy > best_accuracy:

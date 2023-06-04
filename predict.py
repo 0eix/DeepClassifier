@@ -90,7 +90,7 @@ def predict(model, image, top_k, device):
         device (torch.device): the device to use for inference.
 
     return:
-        top_p (List): the probabilities of of the top k classes.
+        top_p (List): the probabilities of the top k classes.
 
         top_idx (List): the list of top classes indices.
     """
@@ -111,16 +111,14 @@ def convert_idx_to_real_class_name(top_idx, class_to_idx, cat_to_name):
     Map a list of predicted indices to their corresponding class names.
 
     Args:
-        top_idx (List): a list of predicted classes indices.
+        top_idx (List): A list of indices representing the predicted classes.
 
-        class_to_idx (Dict): a dictionary containing the mapping of each
-        class number to it's corresponding indice in the dataset.
+        class_to_idx (Dict): A dictionary mapping each class number to its corresponding index in the dataset.
 
-        cat_to_name (Dict): a dictionary containing the mapping of each
-        class number to it's corresponding label.
+        cat_to_name (Dict): A dictionary mapping each class number to its corresponding label.
 
-    return:
-        top_class (List): the list of top classes labels.
+    Returns:
+        top_class (List): The list of labels corresponding to the top classes.
     """
     # Dict for reverse lookup
     idx_to_cat = {v: k for k, v in class_to_idx.items()}
